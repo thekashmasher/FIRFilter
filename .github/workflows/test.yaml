@@ -1,52 +1,32 @@
-name: test
-on: [push, workflow_dispatch]
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
   test:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: Install iverilog
-        shell: bash
-        run: sudo apt-get update && sudo apt-get install -y iverilog
-
-      # Set Python up and install cocotb
-      - name: Setup python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install Python packages
-        shell: bash
-        run: pip install -r test/requirements.txt
-
-      - name: Run tests
+      - name: Install Verilog tools
         run: |
-          cd test
-          make clean
-          make
-          # Verify results.xml exists before checking for failures
-          if [ ! -f results.xml ]; then
-            echo "results.xml not found. Test execution may have failed."
-            exit 1
-          fi
-          # Ensure no failures in results.xml
-          grep failure results.xml && exit 1 || echo "No failures found."
+          sudo apt-get install -y iverilog gtkwave
 
-      - name: Test Summary
-        uses: test-summary/action@v2.3
-        with:
-          paths: "test/results.xml"
-        if: always() # Ensures this step runs regardless of test success or failure
+      - name: Run Simulation
+        run: |
+          iverilog -o sim src/tb.v src/fir.v
+          vvp sim
 
-      - name: Upload artifacts (VCD and Results)
-        if: success() || failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-artifacts
-          path: |
-            test/tb.vcd
-            test/results.xml
+      - name: Save Waveform
+        run: |
+          mv tb.vcd simulation_results.vcd
+        artifacts:
+          paths:
+            - simulation_results.vcd
