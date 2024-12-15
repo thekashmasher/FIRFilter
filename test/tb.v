@@ -14,7 +14,78 @@ module tb ();
   end
 
   // Wire up the inputs and outputs:
+  reg clk;`timescale 1ns / 1ps
+
+module fir_core_core_fsm_tb;
+
+  // Inputs
   reg clk;
+  reg rst;
+  reg Shift_Accum_Loop_C_0_tr0;
+  reg [7:0] x_rsc_dat; // Assuming 8-bit data for simplicity
+  reg [7:0] input_0, input_1, input_2, input_3, input_4;
+  reg [2:0] sel; // Selector for the inputs
+
+  // Outputs
+  wire [7:0] fsm_output;
+  wire [7:0] y_rsc_dat;
+  wire y_triosy_lz, x_triosy_lz;
+
+  // Instantiate the Unit Under Test (UUT)
+  fir_core_core_fsm uut (
+    .clk(clk),
+    .rst(rst),
+    .Shift_Accum_Loop_C_0_tr0(Shift_Accum_Loop_C_0_tr0),
+    .x_rsc_dat(x_rsc_dat),
+    .input_0(input_0),
+    .input_1(input_1),
+    .input_2(input_2),
+    .input_3(input_3),
+    .input_4(input_4),
+    .sel(sel),
+    .fsm_output(fsm_output),
+    .y_rsc_dat(y_rsc_dat),
+    .y_triosy_lz(y_triosy_lz),
+    .x_triosy_lz(x_triosy_lz)
+  );
+
+  // Clock generation
+  initial begin
+    clk = 0;
+    forever #5 clk = ~clk; // 10 ns clock period
+  end
+
+  // Test sequence
+  initial begin
+    // Initialize inputs
+    rst = 1;
+    Shift_Accum_Loop_C_0_tr0 = 0;
+    x_rsc_dat = 0;
+    input_0 = 8'h00;
+    input_1 = 8'h01;
+    input_2 = 8'h02;
+    input_3 = 8'h03;
+    input_4 = 8'h04;
+    sel = 3'b000;
+
+    // Reset sequence
+    #10 rst = 0;
+
+    // Apply test vectors
+    #10 Shift_Accum_Loop_C_0_tr0 = 1;
+        sel = 3'b001;
+        x_rsc_dat = 8'hAA;
+    #10 sel = 3'b010;
+    #10 sel = 3'b011;
+    #10 sel = 3'b100;
+    #10 sel = 3'b101;
+
+    // Wait and finish
+    #100 $stop;
+  end
+
+endmodule
+
   reg rst_n;
   reg ena;
   reg [7:0] ui_in;
