@@ -1,59 +1,45 @@
 `timescale 1ns / 1ps
 
-module fir_tb;
-
-  // Inputs
+module tb_fir;
   reg clk;
   reg rst;
-  reg [31:0] x_rsc_dat;
+  reg [31:0] x_in;
+  wire [31:0] y_out;
 
-  // Outputs
-  wire [31:0] y_rsc_dat;
-  wire y_triosy_lz;
-  wire x_triosy_lz;
-
-  // Instantiate the FIR module
+  // DUT Instance
   fir uut (
     .clk(clk),
     .rst(rst),
-    .x_rsc_dat(x_rsc_dat),
-    .x_triosy_lz(x_triosy_lz),
-    .y_rsc_dat(y_rsc_dat),
-    .y_triosy_lz(y_triosy_lz)
+    .x_rsc_dat(x_in),
+    .y_rsc_dat(y_out)
   );
 
   // Clock Generation
   initial begin
     clk = 0;
-    forever #5 clk = ~clk; // 100 MHz clock
+    forever #5 clk = ~clk; // 10 ns clock period
   end
 
-  // Reset Sequence
+  // Stimulus
   initial begin
-    rst = 1;
-    #15 rst = 0;
+    rst = 1; 
+    x_in = 0;
+    #20; 
+    rst = 0; 
+    #10;
+    x_in = 32'h00000001; #10;
+    x_in = 32'h00000002; #10;
+    x_in = 32'h00000003; #10;
+    x_in = 32'h00000004; #10;
+    x_in = 32'h00000005; #10;
+
+    #50;
+    $finish;
   end
 
-  // Input Stimulus
+  // Dump Waveform
   initial begin
-    x_rsc_dat = 0;
-
-    // Wait for reset
-    @(negedge rst);
-
-    // Apply test data
-    repeat (10) begin
-      @(posedge clk);
-      x_rsc_dat = $random; // Replace with known test vectors if needed
-    end
-
-    // End Simulation
-    #100 $stop;
+    $dumpfile("tb.vcd");
+    $dumpvars(0, tb_fir);
   end
-
-  // Output Monitoring
-  always @(posedge clk) begin
-    $display("At time %0t: Input = %h, Output = %h", $time, x_rsc_dat, y_rsc_dat);
-  end
-
 endmodule
