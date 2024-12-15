@@ -1,53 +1,18 @@
-# Tiny Tapeout project information
 project:
-  title:        "Fir Filter"
-  author:       "Aaquil Kasham"
-  discord:      "na"
-  description:  "FIR Filter"
+  title:        "FIR Filter FSM"
+  author:       "Your Name"
+  discord:      "YourDiscord#1234"
+  description:  "A finite state machine controlling a Finite Impulse Response (FIR) filter computation."
   language:     "Verilog"
-  clock_hz:     100_000_000  # 100 MHz clock
+  clock_hz:     100000000  # 100 MHz clock frequency
 
-  # How many tiles your design occupies? A single tile is about 167x108 uM.
-  tiles: "1x1"
+  inputs:
+    - "clk"
+    - "rst"
+    - "Shift_Accum_Loop_C_0_tr0"
+  outputs:
+    - "fsm_output"
 
-  # Your top module name must start with "tt_um_". Make it unique by including your GitHub username:
-  top_module:  "tt_um_AaquilKasham_fir"
-
-  # List your project's source files here.
-  source_files:
-    - "project.v"
-
-# The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
-pinout:
-  # Inputs
-  ui[0]: "clk"
-  ui[1]: "rst"
-  ui[2]: "Shift_Accum_Loop_C_0_tr0"
-  ui[3]: "x_rsc_dat[0]"
-  ui[4]: "x_rsc_dat[1]"
-  ui[5]: "x_rsc_dat[2]"
-  ui[6]: "x_rsc_dat[3]"
-  ui[7]: "x_rsc_dat[4]"
-
-  # Outputs
-  uo[0]: "fsm_output[0]"
-  uo[1]: "fsm_output[1]"
-  uo[2]: "fsm_output[2]"
-  uo[3]: "y_rsc_dat[0]"
-  uo[4]: "y_rsc_dat[1]"
-  uo[5]: "y_rsc_dat[2]"
-  uo[6]: "y_rsc_dat[3]"
-  uo[7]: "y_rsc_dat[4]"
-
-  # Bidirectional pins
-  uio[0]: ""
-  uio[1]: ""
-  uio[2]: ""
-  uio[3]: ""
-  uio[4]: ""
-  uio[5]: ""
-  uio[6]: ""
-  uio[7]: ""
-
-# Do not change!
-yaml_version: 6
+  testbenches:
+    - "tb.v"
+    - "test.py"
