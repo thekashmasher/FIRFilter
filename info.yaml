@@ -15,7 +15,7 @@ project:
 
   # List your project's source files here.
   source_files:
-    - "project.v"
+    - "fir.v"
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
 pinout:
@@ -25,19 +25,19 @@ pinout:
   ui[2]: "Shift_Accum_Loop_C_0_tr0"
   ui[3]: "x_rsc_dat[0]"
   ui[4]: "x_rsc_dat[1]"
-  ui[5]: "input_0[0]"
-  ui[6]: "input_0[1]"
-  ui[7]: "input_1[0]"
+  ui[5]: "x_rsc_dat[2]"
+  ui[6]: "x_rsc_dat[3]"
+  ui[7]: "x_rsc_dat[4]"
 
   # Outputs
   uo[0]: "fsm_output[0]"
   uo[1]: "fsm_output[1]"
   uo[2]: "fsm_output[2]"
-  uo[3]: "fsm_output[3]"
-  uo[4]: "y_rsc_dat[0]"
-  uo[5]: ""
-  uo[6]: ""
-  uo[7]: ""
+  uo[3]: "y_rsc_dat[0]"
+  uo[4]: "y_rsc_dat[1]"
+  uo[5]: "y_rsc_dat[2]"
+  uo[6]: "y_rsc_dat[3]"
+  uo[7]: "y_rsc_dat[4]"
 
   # Bidirectional pins
   uio[0]: ""
