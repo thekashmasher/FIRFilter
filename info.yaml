@@ -1,42 +1,40 @@
 # Tiny Tapeout project information
 project:
-  title:        "Fir Filter"      # Project title
-  author:       "Aaquil Kasham"      # Your name
-  discord:      "na"      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
-  description:  "FIR Filter"      # One line description of what your project does
-  language:     "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
-  clock_hz:     0       # Clock frequency in Hz (or 0 if not applicable)
+  title:        "Fir Filter"
+  author:       "Aaquil Kasham"
+  discord:      "na"
+  description:  "FIR Filter"
+  language:     "Verilog"
+  clock_hz:     100_000_000  # 100 MHz clock
 
   # How many tiles your design occupies? A single tile is about 167x108 uM.
-  tiles: "1x1"          # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2, 6x2 or 8x2
+  tiles: "1x1"
 
-  # Your top module name must start with "tt_um_". Make it unique by including your github username:
-  top_module:  "fir_core_core_fsm"
+  # Your top module name must start with "tt_um_". Make it unique by including your GitHub username:
+  top_module:  "tt_um_AaquilKasham_fir"
 
   # List your project's source files here.
-  # Source files must be in ./src and you must list each source file separately, one per line.
-  # Don't forget to also update `PROJECT_SOURCES` in test/Makefile.
   source_files:
     - "project.v"
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
 pinout:
   # Inputs
-  ui[0]: "a[0]"
-  ui[1]: "a[1]"
-  ui[2]: "a[2]"
-  ui[3]: "a[3]"
-  ui[4]: "b[0]"
-  ui[5]: "b[1]"
-  ui[6]: "b[2]"
-  ui[7]: "b[3]"
+  ui[0]: "clk"
+  ui[1]: "rst"
+  ui[2]: "Shift_Accum_Loop_C_0_tr0"
+  ui[3]: "x_rsc_dat[0]"
+  ui[4]: "x_rsc_dat[1]"
+  ui[5]: "input_0[0]"
+  ui[6]: "input_0[1]"
+  ui[7]: "input_1[0]"
 
   # Outputs
-  uo[0]: "sum[0]"
-  uo[1]: "sum[1]"
-  uo[2]: "sum[2]"
-  uo[3]: "sum[3]"
-  uo[4]: "carry_out"
+  uo[0]: "fsm_output[0]"
+  uo[1]: "fsm_output[1]"
+  uo[2]: "fsm_output[2]"
+  uo[3]: "fsm_output[3]"
+  uo[4]: "y_rsc_dat[0]"
   uo[5]: ""
   uo[6]: ""
   uo[7]: ""
