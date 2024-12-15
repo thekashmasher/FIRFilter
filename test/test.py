@@ -3,45 +3,34 @@ from cocotb.clock import Clock
 from cocotb.triggers import RisingEdge, Timer
 
 @cocotb.test()
-async def test_fir_core_core_fsm(dut):
-    """ Test the FIR core FSM functionality """
+async def test_fir_fsm(dut):
+    """
+    Test FSM transitions for the FIR Filter core FSM.
+    """
 
-    # Generate clock
-    clock = Clock(dut.clk, 10, units="ns")  # 10ns period
+    # Start a clock with a 10 ns period (100 MHz)
+    clock = Clock(dut.clk, 10, units="ns")
     cocotb.start_soon(clock.start())
 
-    # Initialize inputs
+    # Apply reset
     dut.rst.value = 1
     dut.Shift_Accum_Loop_C_0_tr0.value = 0
-    dut.x_rsc_dat.value = 0
-    dut.input_0.value = 0
-    dut.input_1.value = 1
-    dut.input_2.value = 2
-    dut.input_3.value = 3
-    dut.input_4.value = 4
-    dut.sel.value = 0
+    await Timer(20, units="ns")  # Wait 2 clock cycles
+    dut.rst.value = 0  # Release reset
 
-    # Apply reset
-    await Timer(20, units="ns")  # Wait 20ns
-    dut.rst.value = 0
+    # Log initial state
+    cocotb.log.info(f"Initial FSM output: {dut.fsm_output.value}")
 
-    # Apply test vectors
-    await Timer(10, units="ns")
+    # Test state transition
+    cocotb.log.info("Testing state transitions...")
     dut.Shift_Accum_Loop_C_0_tr0.value = 1
-    dut.sel.value = 1
-    dut.x_rsc_dat.value = 0xAA
+    await RisingEdge(dut.clk)
 
-    await Timer(10, units="ns")
-    dut.sel.value = 2
+    # Assert FSM transitioned correctly
+    assert dut.fsm_output.value == 1, "FSM did not transition to expected state!"
 
-    await Timer(10, units="ns")
-    dut.sel.value = 3
+    # Deactivate the trigger and check behavior
+    dut.Shift_Accum_Loop_C_0_tr0.value = 0
+    await RisingEdge(dut.clk)
 
-    await Timer(10, units="ns")
-    dut.sel.value = 4
-
-    await Timer(10, units="ns")
-    dut.sel.value = 5
-
-    # Wait and observe
-    await Timer(100, units="ns")
+    cocotb.log.info("FSM testing completed successfully.")
