@@ -551,6 +551,3 @@ module fir (
       .x_triosy_lz(x_triosy_lz)
     );
 endmodule
-
-
-
