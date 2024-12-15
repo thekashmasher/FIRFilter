@@ -28,20 +28,25 @@ jobs:
           cd test
           make clean
           make
-          # make will return success even if the test fails, so check for failure in the results.xml
-          ! grep failure results.xml
+          # Verify results.xml exists before checking for failures
+          if [ ! -f results.xml ]; then
+            echo "results.xml not found. Test execution may have failed."
+            exit 1
+          fi
+          # Ensure no failures in results.xml
+          grep failure results.xml && exit 1 || echo "No failures found."
 
       - name: Test Summary
         uses: test-summary/action@v2.3
         with:
           paths: "test/results.xml"
-        if: always()
+        if: always() # Ensures this step runs regardless of test success or failure
 
-      - name: upload vcd
+      - name: Upload artifacts (VCD and Results)
         if: success() || failure()
         uses: actions/upload-artifact@v4
         with:
-          name: test-vcd
+          name: test-artifacts
           path: |
             test/tb.vcd
             test/results.xml
